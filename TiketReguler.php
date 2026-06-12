@@ -3,11 +3,11 @@
 require_once "Tiket.php";
 
 
-class TiketReguler extends Tiket{
+class TiketReguler extends Tiket {
 
 
-    protected $tipe_audio;
-    protected $lokasi_baris;
+    protected $tipeAudio;
+    protected $lokasiBaris;
 
 
 
@@ -15,13 +15,14 @@ class TiketReguler extends Tiket{
 
         parent::__construct($data);
 
-        $this->tipe_audio = $data['tipe_audio'];
-
-        $this->lokasi_baris = $data['lokasi_baris'];
+        $this->tipeAudio = $data['tipe_audio'];
+        $this->lokasiBaris = $data['lokasi_baris'];
 
     }
 
 
+
+    // Overriding method hitungTotalHarga()
 
     public function hitungTotalHarga(){
 
@@ -34,9 +35,9 @@ class TiketReguler extends Tiket{
     public function tampilkanInfoFasilitas(){
 
         return "
-        Studio Reguler <br>
-        Audio : $this->tipe_audio <br>
-        Lokasi Baris : $this->lokasi_baris
+        Studio : Reguler <br>
+        Audio : $this->tipeAudio <br>
+        Lokasi Baris : $this->lokasiBaris
         ";
 
     }
