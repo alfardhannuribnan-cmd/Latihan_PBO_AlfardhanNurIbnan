@@ -1,5 +1,9 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 require_once "database.php";
 
 require_once "TiketReguler.php";
@@ -7,6 +11,8 @@ require_once "TiketIMAX.php";
 require_once "TiketVelvet.php";
 
 
+
+// koneksi database
 
 $db = new Database();
 
@@ -16,7 +22,16 @@ $koneksi = $db->getKoneksi();
 
 $query = "SELECT * FROM tabel_tiket";
 
-$dataTiket = mysqli_query($koneksi,$query);
+
+$result = mysqli_query($koneksi, $query);
+
+
+
+if(!$result){
+
+    die("Query error : " . mysqli_error($koneksi));
+
+}
 
 
 
@@ -30,21 +45,54 @@ $dataTiket = mysqli_query($koneksi,$query);
 
 <title>Daftar Tiket Bioskop</title>
 
+
 <style>
 
+
 body{
+
     font-family: Arial;
+    background:#f2f2f2;
+
 }
+
+
+
+.container{
+
+    display:flex;
+    flex-wrap:wrap;
+
+}
+
 
 
 .card{
 
-    border:1px solid black;
-    padding:15px;
+
+    background:white;
+
+    border:1px solid #ccc;
+
+    border-radius:10px;
+
+    padding:20px;
+
     margin:15px;
+
     width:350px;
 
+
 }
+
+
+
+h1{
+
+    text-align:center;
+
+}
+
 
 
 h2{
@@ -52,6 +100,8 @@ h2{
     color:#333;
 
 }
+
+
 
 </style>
 
@@ -62,22 +112,41 @@ h2{
 <body>
 
 
-<h1>Daftar Tiket Penonton</h1>
+
+<h1>DAFTAR TIKET PENONTON</h1>
+
+
+
+<div class="container">
 
 
 
 <?php
 
 
-while($data = mysqli_fetch_assoc($dataTiket)){
+
+if(mysqli_num_rows($result)==0){
+
+
+    echo "<h3>Data tiket masih kosong</h3>";
+
+
+}
 
 
 
-    // Polimorfisme
+while($data = mysqli_fetch_assoc($result)){
+
+
+
+    // memilih class sesuai jenis studio
+
 
     if($data['jenis_studio']=="REGULER"){
 
+
         $tiket = new TiketReguler($data);
+
 
     }
 
@@ -87,8 +156,8 @@ while($data = mysqli_fetch_assoc($dataTiket)){
 
         $tiket = new TiketIMAX($data);
 
-    }
 
+    }
 
 
     elseif($data['jenis_studio']=="VELVET"){
@@ -96,13 +165,15 @@ while($data = mysqli_fetch_assoc($dataTiket)){
 
         $tiket = new TiketVelvet($data);
 
-    }
 
+    }
 
 
     else{
 
+
         continue;
+
 
     }
 
@@ -116,7 +187,7 @@ while($data = mysqli_fetch_assoc($dataTiket)){
 
 
 <h2>
-Studio 
+Studio : 
 <?= $data['jenis_studio']; ?>
 
 </h2>
@@ -127,23 +198,23 @@ Studio
 
 <?= $data['id_tiket']; ?>
 
-<br>
+<br><br>
 
 
 
-<b>Film :</b>
+<b>Nama Film :</b>
 
 <?= $data['nama_film']; ?>
 
-<br>
+<br><br>
 
 
 
-<b>Jadwal :</b>
+<b>Jadwal Tayang :</b>
 
 <?= $data['jadwal_tayang']; ?>
 
-<br>
+<br><br>
 
 
 
@@ -151,15 +222,13 @@ Studio
 
 <?= $data['jumlah_kursi']; ?>
 
-<br>
+<br><br>
 
 
 
 <b>Harga Dasar :</b>
 
 Rp <?= number_format($data['harga_dasar_tiket']); ?>
-
-<br><br>
 
 
 
@@ -172,23 +241,26 @@ Rp <?= number_format($data['harga_dasar_tiket']); ?>
 
 <?php
 
-// Memanggil method polymorphism
 
 echo $tiket->tampilkanInfoFasilitas();
+
 
 
 ?>
 
 
+<hr>
 
-<br><br>
 
 
 <h3>
 
 Total Harga :
 
-Rp <?= number_format($tiket->hitungTotalHarga()); ?>
+Rp 
+
+<?= number_format($tiket->hitungTotalHarga()); ?>
+
 
 </h3>
 
@@ -200,12 +272,17 @@ Rp <?= number_format($tiket->hitungTotalHarga()); ?>
 
 <?php
 
+
 }
 
 
 ?>
 
 
+</div>
+
+
 </body>
+
 
 </html>

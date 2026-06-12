@@ -3,44 +3,61 @@
 require_once "Tiket.php";
 
 
-class TiketReguler extends Tiket {
+class TiketReguler extends Tiket{
 
 
-    protected $tipeAudio;
-    protected $lokasiBaris;
+private $tipeAudio;
 
-
-
-    public function __construct($data){
-
-        parent::__construct($data);
-
-        $this->tipeAudio = $data['tipe_audio'];
-        $this->lokasiBaris = $data['lokasi_baris'];
-
-    }
+private $lokasiBaris;
 
 
 
-    // Overriding method hitungTotalHarga()
-
-    public function hitungTotalHarga(){
-
-        return $this->jumlah_kursi * $this->harga_dasar_tiket;
-
-    }
+public function __construct($data){
 
 
+parent::__construct($data);
 
-    public function tampilkanInfoFasilitas(){
 
-        return "
-        Studio : Reguler <br>
-        Audio : $this->tipeAudio <br>
-        Lokasi Baris : $this->lokasiBaris
-        ";
+$this->tipeAudio = $data['tipe_audio'] ?? "Tidak tersedia";
 
-    }
+
+$this->lokasiBaris = $data['lokasi_baris'] ?? "Tidak tersedia";
+
+
+}
+
+
+
+
+public function hitungTotalHarga(){
+
+
+return $this->jumlah_kursi * $this->hargaDasarTiket;
+
+
+}
+
+
+
+
+
+public function tampilkanInfoFasilitas(){
+
+
+return "
+
+Studio : Reguler <br>
+
+Audio : $this->tipeAudio <br>
+
+Lokasi Baris : $this->lokasiBaris
+
+
+";
+
+
+}
+
 
 
 }
